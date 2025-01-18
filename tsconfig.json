@@ -1,7 +1,35 @@
+// {
+//   "files": [],
+//   "references": [
+//     { "path": "./tsconfig.app.json" },
+//     { "path": "./tsconfig.node.json" }
+//   ],
+//   "compilerOptions": {
+//     "types": ["node"]
+//   }
+// }
+
+
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+  "compilerOptions": {
+    "target": "es5",                    // هدف کامپایل TypeScript به جاوا اسکریپت
+    "lib": ["dom", "esnext"],           // کتابخانه‌هایی که TypeScript باید بارگذاری کند
+    "allowJs": true,                    // اجازه استفاده از فایل‌های جاوا اسکریپت
+    "skipLibCheck": true,               // اسکن نکردن تایپ‌های کتابخانه‌ها
+    "esModuleInterop": true,            // تعامل بهتر با ماژول‌های ES6
+    "strict": true,                     // فعال کردن حالت سخت‌گیرانه
+    "module": "esnext",                 // نوع ماژول
+    "moduleResolution": "node",         // نحوه رزولوشن ماژول‌ها
+    "resolveJsonModule": true,          // اجازه وارد کردن فایل‌های JSON
+    "isolatedModules": true,            // هر فایل به طور جداگانه کامپایل می‌شود
+    "noEmit": true,                     // از تولید فایل‌های خروجی جلوگیری می‌کند
+    "jsx": "react-jsx"                  // تنظیمات JSX برای React
+  },
+  "include": [
+    "src/**/*.ts",                       // شمول فایل‌های TypeScript
+    "src/**/*.tsx"                       // شمول فایل‌های TypeScript با JSX
+  ],
+  "exclude": [
+    "node_modules"                       // عدم شمول پوشه node_modules
   ]
 }
