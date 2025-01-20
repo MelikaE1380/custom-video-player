@@ -227,14 +227,14 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     setFullScreen((prevFullscreen) => {
       if (!prevFullscreen && videoContainer) {
 
-        if (videoContainer.requestFullscreen) {
-          videoContainer.requestFullscreen();
+        if ((videoElement as any).requestFullscreen) {
+          (videoElement as any).requestFullscreen();
 
           // videoRef.current?.requestFullscreen();
         } else if ((videoElement as any)?.webkitRequestFullscreen) {
           (videoElement as any).webkitRequestFullscreen();
-        }else if((videoContainer as any).msRequestFullscreen){
-        (videoContainer as any).msRequestFullscreen();
+        }else if((videoElement as any).msRequestFullscreen){
+        (videoElement as any).msRequestFullscreen();
         }
       } else {
 
