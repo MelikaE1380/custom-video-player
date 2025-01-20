@@ -220,69 +220,35 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   };
 
 
-  // const fullScreenClickHandler = () => {
-  //   const videoContainer = videoContainerRef.current;
-
-  //   const videoElement = videoRef.current;
-  //   setFullScreen((prevFullscreen) => {
-  //     if (!prevFullscreen && videoContainer) {
-
-  //       if (videoContainer.requestFullscreen) {
-  //         videoContainer.requestFullscreen();
-
-  //         // videoRef.current?.requestFullscreen();
-  //       } else if ((videoContainer as any)?.webkitRequestFullscreen) {
-  //         (videoContainer as any).webkitRequestFullscreen();
-  //       } else if ((videoContainer as any).msRequestFullscreen) {
-  //         (videoContainer as any).msRequestFullscreen();
-  //       }
-  //     } else {
-
-  //       if (document.exitFullscreen) {
-  //         document.exitFullscreen();
-  //       } else if ((document as any).webkitExitFullscreen) {
-  //         (document as any).webkitExitFullscreen();
-  //       }
-  //     }
-
-  //     return !prevFullscreen;
-  //   });
-  // };
-
-
   const fullScreenClickHandler = () => {
     const videoContainer = videoContainerRef.current;
     const videoElement = videoRef.current;
-  
+
     setFullScreen((prevFullscreen) => {
       if (!prevFullscreen && videoContainer) {
-        // ورود به حالت فول‌اسکرین
+
         if (videoContainer.requestFullscreen) {
           videoContainer.requestFullscreen();
-        } else if ((videoContainer as any)?.webkitRequestFullscreen) {
-          (videoContainer as any).webkitRequestFullscreen(); // Safari (برای کانتینر)
-        } else if ((videoContainer as any)?.msRequestFullscreen) {
-          (videoContainer as any).msRequestFullscreen(); // Internet Explorer/Edge
-        }  else {
-          console.warn("Fullscreen API is not supported in this browser.");
+
+          // videoRef.current?.requestFullscreen();
+        } else if ((videoElement as any)?.webkitRequestFullscreen) {
+          (videoElement as any).webkitRequestFullscreen();
+        }else if((videoContainer as any).msRequestFullscreen){
+        (videoContainer as any).msRequestFullscreen();
         }
       } else {
-        // خروج از حالت فول‌اسکرین
+
         if (document.exitFullscreen) {
           document.exitFullscreen();
-        } else if ((document as any)?.webkitExitFullscreen) {
-          (document as any).webkitExitFullscreen(); // Safari
-        } else if ((document as any)?.msExitFullscreen) {
-          (document as any).msExitFullscreen(); // Internet Explorer/Edge
-        } else {
-          console.warn("Exit Fullscreen API is not supported in this browser.");
+        } else if ((document as any).webkitExitFullscreen) {
+          (document as any).webkitExitFullscreen();
         }
       }
-  
+
       return !prevFullscreen;
     });
   };
-  
+
 
   useEffect(() => {
 

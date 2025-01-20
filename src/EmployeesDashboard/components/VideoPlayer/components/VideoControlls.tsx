@@ -253,7 +253,7 @@ function secondsToHms(seconds: any) {
 
   return (
     <>
-      <div className={`pb-[10px] z-10000 bottom-0 bg-opacity-70 opacity-100 transition-opacity duration-300 ease-linear w-[100%] flex flex-col absolute ${controlsVisible ? "block" : "hidden"}`}
+      <div className={`pb-[10px] z-600000 bottom-0 bg-opacity-70 opacity-100 transition-opacity duration-300 ease-linear w-[100%] flex flex-col absolute ${controlsVisible ? "block" : "hidden"}`}
           style={{
             background: "linear-gradient(to top, rgba(20, 20, 20, 0.8), rgba(20, 20, 20, 0.1))",
             animation: "fadeIn 2s ease-in-out forwards",
