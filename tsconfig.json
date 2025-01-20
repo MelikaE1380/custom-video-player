@@ -12,6 +12,7 @@
 
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "target": "es5",                    // هدف کامپایل TypeScript به جاوا اسکریپت
     "lib": ["dom", "esnext"],           // کتابخانه‌هایی که TypeScript باید بارگذاری کند
     "allowJs": true,                    // اجازه استفاده از فایل‌های جاوا اسکریپت
