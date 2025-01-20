@@ -220,35 +220,63 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   };
 
 
+  // const fullScreenClickHandler = () => {
+  //   const videoContainer = videoContainerRef.current;
+  //   const videoElement = videoRef.current;
+
+  //   setFullScreen((prevFullscreen) => {
+  //     if (!prevFullscreen && videoContainer) {
+
+  //       if ((videoContainer as any).requestFullscreen) {
+  //         (videoContainer as any).requestFullscreen();
+
+  //         // videoRef.current?.requestFullscreen();
+  //       } else if ((videoContainer as any)?.webkitRequestFullscreen) {
+  //         (videoContainer as any).webkitRequestFullscreen();
+  //       }else if((videoContainer as any).msRequestFullscreen){
+  //       (videoContainer as any).msRequestFullscreen();
+  //       }
+  //     } else {
+
+  //       if (document.exitFullscreen) {
+  //         document.exitFullscreen();
+  //       } else if ((document as any).webkitExitFullscreen) {
+  //         (document as any).webkitExitFullscreen();
+  //       }
+  //     }
+
+  //     return !prevFullscreen;
+  //   });
+  // };
+
+
   const fullScreenClickHandler = () => {
     const videoContainer = videoContainerRef.current;
-    const videoElement = videoRef.current;
+    const video = videoRef.current;
 
-    setFullScreen((prevFullscreen) => {
-      if (!prevFullscreen && videoContainer) {
+    if (!videoContainer) return;
 
-        if ((videoElement as any).requestFullscreen) {
-          (videoElement as any).requestFullscreen();
+    const isFullScreen =
+      document.fullscreenElement || (document as any).webkitFullscreenElement;
 
-          // videoRef.current?.requestFullscreen();
-        } else if ((videoElement as any)?.webkitRequestFullscreen) {
-          (videoElement as any).webkitRequestFullscreen();
-        }else if((videoElement as any).msRequestFullscreen){
-        (videoElement as any).msRequestFullscreen();
-        }
-      } else {
-
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if ((document as any).webkitExitFullscreen) {
-          (document as any).webkitExitFullscreen();
-        }
+    if (!isFullScreen) {
+      if (videoContainer.requestFullscreen) {
+        videoContainer.requestFullscreen();
+      } else if ((videoContainer as any).webkitRequestFullscreen) {
+        (videoContainer as any).webkitRequestFullscreen();
+      } else if ((video as any)?.webkitRequestFullscreen) {
+        (video as any).webkitRequestFullscreen();
       }
-
-      return !prevFullscreen;
-    });
+      setFullScreen(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      }
+      setFullScreen(false);
+    }
   };
-
 
   useEffect(() => {
 
@@ -350,16 +378,37 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     }
   }, []);
 
+  // useEffect(() => {
+  //   const handleFullscreenChange = () => {
+  //     setFullScreen(!!document.fullscreenElement);
+  //   };
+
+  //   document.addEventListener("fullscreenchange", handleFullscreenChange);
+  //   document.addEventListener("fullscreenchange", handleFullscreenChange);
+  //   return () => {
+  //     document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  //     document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  //   };
+  // }, []);
+
+
+
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      setFullScreen(!!document.fullscreenElement);
+    const handleFullScreenChange = () => {
+      const isFullScreen =
+        document.fullscreenElement || (document as any).webkitFullscreenElement;
+      setFullScreen(!!isFullScreen);
     };
 
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullScreenChange);
+
     return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullScreenChange
+      );
     };
   }, []);
 
@@ -411,7 +460,6 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 };
 
 export default VideoPlayer;
-
 
 
 
