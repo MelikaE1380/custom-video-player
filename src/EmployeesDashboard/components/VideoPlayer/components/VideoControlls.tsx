@@ -202,7 +202,7 @@ function secondsToHms(seconds: any) {
   const formattedHours = String(hours).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
   const formattedMinutes = String(minutes).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
   const formattedSeconds = String(secs).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
-
+  console.log(formattedHours);
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
