@@ -236,7 +236,8 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
     if (canPlayNativeHls(video)) {
       // استفاده از پخش بومی
-      video.src = initialUrl;
+      video.src = 'https://ncdn.telewebion.com/tv3/live/playlist.m3u8';
+      
       video.play(); // برای اطمینان از پخش خودکار پس از تغییر src
       video.addEventListener('timeupdate', () => {
         const duration = video.duration || 0;
