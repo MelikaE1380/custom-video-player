@@ -231,7 +231,21 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     const video = videoRef.current;
 
     // بررسی پشتیبانی از HLS بومی
-   if (Hls.isSupported()) {
+    const canPlayNativeHls = (video: HTMLVideoElement) =>
+      video.canPlayType('application/vnd.apple.mpegurl') !== '';
+
+    if (canPlayNativeHls(video)) {
+      // استفاده از پخش بومی
+      video.src = initialUrl;
+      
+      video.play(); // برای اطمینان از پخش خودکار پس از تغییر src
+      video.addEventListener('timeupdate', () => {
+        const duration = video.duration || 0;
+        setCurrentTime(video.currentTime);
+        setDuration(duration);
+        setProgress((video.currentTime / duration) * 100);
+      });
+    } else if (Hls.isSupported()) {
       // استفاده از HLS.js
       const hls = new Hls();
       hls.attachMedia(video);
