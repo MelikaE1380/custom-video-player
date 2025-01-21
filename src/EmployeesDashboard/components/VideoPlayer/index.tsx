@@ -536,7 +536,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
-import {  isIOS } from 'react-device-detect';
+import {  isIOS, setUserAgent } from 'react-device-detect';
 
 import PlaySvg from "../../../assets/svg/PlaySvg";
 import './styles/styles.css'
@@ -596,7 +596,9 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
 
   const isIosDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  console.log(navigator.userAgent);
   console.log("isIosDevice:", isIosDevice);
+
 
   
   
@@ -904,6 +906,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
   return (
     <>
+    <p>{navigator.userAgent}</p>
       {isIosDevice ? (<><div>IosPlayer</div>
         <video ref={videoRef} id="audioPlayer" className='custom-video-player min-w-full min-h-full' controls >
           مرورگر شما از ویدیو پشتیبانی نمی کند.
