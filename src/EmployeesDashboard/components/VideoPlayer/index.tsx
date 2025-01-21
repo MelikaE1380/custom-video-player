@@ -595,7 +595,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   // const [isIos, setIsIos] = useState(false);
 
 
-  const isIosDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isIosDevice = /Macintosh|iPad|iPhone|iPod/.test(navigator.userAgent);
   console.log(navigator.userAgent);
   console.log("isIosDevice:", isIosDevice);
 
