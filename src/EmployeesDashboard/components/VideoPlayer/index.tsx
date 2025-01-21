@@ -238,7 +238,7 @@
 //     if (canPlayNativeHls(video)) {
 //       // استفاده از پخش بومی
 //       video.src = initialUrl;
-      
+
 //       video.play(); // برای اطمینان از پخش خودکار پس از تغییر src
 //       video.addEventListener('timeupdate', () => {
 //         const duration = video.duration || 0;
@@ -590,18 +590,18 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   const [duration, setDuration] = useState(0);
   const [isLive, setIsLive] = useState<boolean>(false);
   const [fullscreen, setFullScreen] = useState<boolean>(false);
-const videoRefren = useRef<HTMLVideoElement>(null);
+  const videoRefren = useRef<HTMLVideoElement>(null);
   const [isIos, setIsIos] = useState(false);
 
-  
+
 
 
   // useEffect(() => {
   //   const detectIos = () => {
   //     const userAgent = navigator.userAgent.toLowerCase();
-  
+
   //     const userAgentData = (navigator as any).userAgentData;
-  
+
   //     if (userAgentData && userAgentData.platform) {
   //       const platform = userAgentData.platform.toLowerCase();
   //       if (platform.includes('iphone') || platform.includes('ipad') || platform.includes('ipod')) {
@@ -610,7 +610,7 @@ const videoRefren = useRef<HTMLVideoElement>(null);
   //         return;
   //       }
   //     }
-  
+
 
   //     if (
   //       userAgent.includes('iphone') ||
@@ -624,10 +624,66 @@ const videoRefren = useRef<HTMLVideoElement>(null);
   //       setIsIos(false);
   //     }
   //   };
-  
+
   //   detectIos();
   // }, []);
-  
+
+
+
+  // const detectIos = () => {
+  //   // بررسی userAgent
+  //   const userAgent = navigator.userAgent.toLowerCase();
+
+  //   // بررسی userAgentData (فقط در مرورگرهای جدید)
+  //   const userAgentData = (navigator as any).userAgentData;
+
+  //   if (userAgentData && userAgentData.platform) {
+  //     const platform = userAgentData.platform.toLowerCase();
+  //     if (
+  //       platform === 'iphone' ||
+  //       platform === 'ipad' ||
+  //       platform === 'ipod'
+  //     ) {
+  //       setIsIos(true);
+  //       console.log('دستگاه ios میباشد');
+  //       return;
+  //     }
+  //   }
+
+  //   // fallback: بررسی userAgent
+  //   if (
+  //     userAgent.includes('iphone') ||
+  //     userAgent.includes('ipad') ||
+  //     userAgent.includes('ipod')
+  //   ) {
+  //     setIsIos(true);
+  //     console.log('دستگاه ios میباشد');
+  //   } else {
+  //     console.log('نیست نیست');
+  //     setIsIos(false);
+  //   }
+  // };
+
+  // // نمایش اطلاعات مرورگر برای اشکال‌زدایی
+  // console.log("navigator.userAgent:", navigator.userAgent);
+  // console.log("navigator.userAgentData:", (navigator as any).userAgentData);
+
+  // // بررسی قابلیت‌های خاص Safari
+  // const detectIosWithSafariCheck = () => {
+  //   const userAgent = navigator.userAgent.toLowerCase();
+  //   const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+  //   const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+
+  //   if (isIosDevice && isSafari) {
+  //     setIsIos(true);
+  //     console.log('دستگاه ios میباشد');
+  //   } else {
+  //     setIsIos(false);
+  //     console.log('نیست نیست');
+  //   }
+  // };
+
+
 
 
   const detectIos = () => {
@@ -637,53 +693,52 @@ const videoRefren = useRef<HTMLVideoElement>(null);
     // بررسی userAgentData (فقط در مرورگرهای جدید)
     const userAgentData = (navigator as any).userAgentData;
   
+    // اگر userAgentData موجود باشد
     if (userAgentData && userAgentData.platform) {
       const platform = userAgentData.platform.toLowerCase();
-      if (
-        platform === 'iphone' || 
-        platform === 'ipad' || 
-        platform === 'ipod'
-      ) {
+      if (platform === 'iphone' || platform === 'ipad' || platform === 'ipod') {
         setIsIos(true);
-        console.log('دستگاه ios میباشد');
+        console.log('دستگاه iOS می‌باشد (از userAgentData)');
         return;
       }
     }
   
     // fallback: بررسی userAgent
-    if (
-      userAgent.includes('iphone') ||
-      userAgent.includes('ipad') ||
-      userAgent.includes('ipod')
-    ) {
+    if (userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod')) {
       setIsIos(true);
-      console.log('دستگاه ios میباشد');
+      console.log('دستگاه iOS می‌باشد (از userAgent)');
     } else {
-      console.log('نیست نیست');
+      console.log('دستگاه iOS نیست');
       setIsIos(false);
     }
   };
   
-  // نمایش اطلاعات مرورگر برای اشکال‌زدایی
-  console.log("navigator.userAgent:", navigator.userAgent);
-  console.log("navigator.userAgentData:", (navigator as any).userAgentData);
-  
-  // بررسی قابلیت‌های خاص Safari
   const detectIosWithSafariCheck = () => {
     const userAgent = navigator.userAgent.toLowerCase();
+    
+    // شناسایی دستگاه iOS
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+    
+    // شناسایی Safari
     const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
   
     if (isIosDevice && isSafari) {
       setIsIos(true);
-      console.log('دستگاه ios میباشد');
+      console.log('دستگاه iOS با Safari می‌باشد');
     } else {
       setIsIos(false);
-      console.log('نیست نیست');
+      console.log('دستگاه iOS یا Safari نیست');
     }
   };
   
-
+  // نمایش اطلاعات برای اشکال‌زدایی
+  console.log("navigator.userAgent:", navigator.userAgent);
+  console.log("navigator.userAgentData:", (navigator as any).userAgentData);
+  
+  // اجرای توابع
+  // detectIos();
+  // detectIosWithSafariCheck();
+  
 
   const handlePlayPause = () => {
     const videoElement = document.getElementById("audioPlayer") as HTMLVideoElement;
@@ -744,105 +799,107 @@ const videoRefren = useRef<HTMLVideoElement>(null);
 
 
 
-//   useEffect(() => {
-//     if (!videoRef.current) return;
-//     const video = videoRef.current;
+  //   useEffect(() => {
+  //     if (!videoRef.current) return;
+  //     const video = videoRef.current;
 
 
-//     if (isIos) {
-//       if (videoRef.current) {
-//         videoRef.current.src = initialUrl;
-//         videoRef.current.play().catch((err) => console.error("Error:", err));
-//       }
-//       return;
-//     }
+  //     if (isIos) {
+  //       if (videoRef.current) {
+  //         videoRef.current.src = initialUrl;
+  //         videoRef.current.play().catch((err) => console.error("Error:", err));
+  //       }
+  //       return;
+  //     }
 
 
-//  else if (Hls.isSupported()) {
+  //  else if (Hls.isSupported()) {
 
-//       const hls = new Hls();
-//       hls.attachMedia(video);
-//       hls.loadSource(initialUrl);
+  //       const hls = new Hls();
+  //       hls.attachMedia(video);
+  //       hls.loadSource(initialUrl);
 
-//       hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
-//         console.log(`Level ${data.level} loaded`);
-//         if (data.details.live) {
-//           console.log('The stream is live.');
-//           setIsLive(true);
-//         } else {
-//           console.log('The stream is VOD.');
-//           setIsLive(false);
-//         }
-//       });
+  //       hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
+  //         console.log(`Level ${data.level} loaded`);
+  //         if (data.details.live) {
+  //           console.log('The stream is live.');
+  //           setIsLive(true);
+  //         } else {
+  //           console.log('The stream is VOD.');
+  //           setIsLive(false);
+  //         }
+  //       });
 
-//       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-//         setDuration(video.duration);
-//       });
+  //       hls.on(Hls.Events.MANIFEST_PARSED, () => {
+  //         setDuration(video.duration);
+  //       });
 
-//       video.addEventListener('timeupdate', () => {
-//         const duration = video.duration || hls.media?.duration || 0;
-//         setCurrentTime(video.currentTime);
-//         setDuration(duration);
-//         setProgress((video.currentTime / duration) * 100);
-//       });
+  //       video.addEventListener('timeupdate', () => {
+  //         const duration = video.duration || hls.media?.duration || 0;
+  //         setCurrentTime(video.currentTime);
+  //         setDuration(duration);
+  //         setProgress((video.currentTime / duration) * 100);
+  //       });
 
-//       return () => {
-//         hls.destroy();
-//       };
-//     } else {
-//       console.error('HLS is not supported on this device/browser.');
-//     }
-//   }, [initialUrl,isIos]);
+  //       return () => {
+  //         hls.destroy();
+  //       };
+  //     } else {
+  //       console.error('HLS is not supported on this device/browser.');
+  //     }
+  //   }, [initialUrl,isIos]);
 
 
-useEffect(() => {
-  if (!videoRef.current) return;
-  const video1 = videoRefren.current;
-const video2 = videoRef.current;
-  if (isIos) {
-    // تنظیم URL برای دستگاه iOS
-    if (video1) {
-      video1.src = initialUrl;
-      video1
-        .play()
-        .catch((err) => console.error("Error playing video on iOS:", err));
+  useEffect(() => {
+    if (!videoRef.current) return;
+    const video1 = videoRefren.current;
+    const video2 = videoRef.current;
+    if (isIos) {
+        detectIos();
+  detectIosWithSafariCheck();
+      // تنظیم URL برای دستگاه iOS
+      if (video1) {
+        video1.src = initialUrl;
+        video1
+          .play()
+          .catch((err) => console.error("Error playing video on iOS:", err));
+      }
+      return;
     }
-    return;
-  }
 
-  if (Hls.isSupported()) {
-    // پشتیبانی از HLS.js
-    const hls = new Hls();
-    hls.attachMedia(video2);
-    hls.loadSource(initialUrl);
+    if (Hls.isSupported()) {
+      // پشتیبانی از HLS.js
+      const hls = new Hls();
+      hls.attachMedia(video2);
+      hls.loadSource(initialUrl);
 
-    hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
-      console.log(`Level ${data.level} loaded`);
-      setIsLive(data.details.live);
-    });
+      hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
+        console.log(`Level ${data.level} loaded`);
+        setIsLive(data.details.live);
+      });
 
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      setDuration(video2.duration);
-    });
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        setDuration(video2.duration);
+      });
 
-    video2.addEventListener("timeupdate", () => {
-      const duration = video2.duration || hls.media?.duration || 0;
-      setCurrentTime(video2.currentTime);
-      setDuration(duration);
-      setProgress((video2.currentTime / duration) * 100);
-    });
+      video2.addEventListener("timeupdate", () => {
+        const duration = video2.duration || hls.media?.duration || 0;
+        setCurrentTime(video2.currentTime);
+        setDuration(duration);
+        setProgress((video2.currentTime / duration) * 100);
+      });
 
-    hls.on(Hls.Events.ERROR, (event, data) => {
-      console.error("HLS.js error:", data);
-    });
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.error("HLS.js error:", data);
+      });
 
-    return () => {
-      hls.destroy();
-    };
-  } else {
-    console.error("HLS is not supported on this device/browser.");
-  }
-}, [initialUrl, isIos]);
+      return () => {
+        hls.destroy();
+      };
+    } else {
+      console.error("HLS is not supported on this device/browser.");
+    }
+  }, [initialUrl, isIos]);
 
 
 
@@ -910,8 +967,8 @@ const video2 = videoRef.current;
 
         } else if ((videoContainer as any)?.webkitRequestFullscreen) {
           (videoContainer as any).webkitRequestFullscreen();
-        }else if((videoContainer as any).msRequestFullscreen){
-        (videoContainer as any).msRequestFullscreen();
+        } else if ((videoContainer as any).msRequestFullscreen) {
+          (videoContainer as any).msRequestFullscreen();
         }
       } else {
 
@@ -950,7 +1007,7 @@ const video2 = videoRef.current;
 
     if (Hls.isSupported()) {
       const hls = new Hls({
-  
+
       });
       hls.loadSource(url);
       hls.attachMedia(videoRef.current!);
@@ -1038,65 +1095,56 @@ const video2 = videoRef.current;
 
   return (
     <>
-     {isIos ? (   <><div>IosPlayer</div>
-      <video
-      ref={videoRefren}
-      id="audioPlayer"
-      className="custom-video-player min-w-full min-h-full"
-      controls
-      playsInline
-      muted={initialMuted}
-      autoPlay={autoPlay}
-      src={initialUrl} // اضافه کردن مستقیم URL
-    >
-      مرورگر شما از ویدیو پشتیبانی نمی کند.
-    </video></>) : (
-             <div
-             ref={videoContainerRef}
-             className={`mx-auto relative max-w-[800px] w-full flex justify-center aspect-video items-center bg-black`}
-             onMouseMove={handleMouseEnter}
-             onMouseLeave={handleMouseLeave}
-           >
-             <div className="relative w-[100%] h-[100%] flex justify-center items-center">
-               <div className="min-w-[100%] min-h-[100%] flex justify-center items-center">
-       
-                 <video ref={videoRef} id="audioPlayer" className={`custom-video-player min-w-full min-h-full ${customStyles.video}`} preload="auto"  autoPlay muted playsInline onDoubleClick={fullScreenClickHandler} onClick={handlePlayPause}>
-                   مرورگر شما از ویدیو پشتیبانی نمی کند.
-                 </video>
-               </div>
-               <div className="absolute z-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer" onClick={handlePlayPause}>
-                 {!isPlaying ? <PlaySvg /> : null}
-               </div>
-             </div>
-       
-       
-             <VideoControlls
-               progress={progress}
-               fullscreen={fullscreen}
-               setProgress={setProgress}
-               isPlaying={isPlaying}
-               isMuted={true}
-               curr={currentTime}
-               durr={duration}
-               controlsVisible={controlsVisible}
-               isLive={isLive}
-               volume={1}
-               videoRefrence={videoRef}
-               videoContainerRefrence={videoContainerRef}
-               onFetchAndParse={fetchAndParseM3U8}
-               handleLoadVideo={loadVideo}
-               hlsInstance={hlsInstance}
-               qualityOptions={qualityOptions}
-               currentQuality=''
-               onFullscreenToggle={fullScreenClickHandler}
-               DefaultURL={DEFAULT_FALLBACK_URL}
-               onPlayPause={handlePlayPause}
-             />
- 
-           </div>
-      
-          )}
-   
+      {isIos ? (<><div>IosPlayer</div>
+        <video ref={videoRefren} id="audioPlayer" className='custom-video-player min-w-full min-h-full' controls >
+          مرورگر شما از ویدیو پشتیبانی نمی کند.
+        </video></>) : (
+        <div
+          ref={videoContainerRef}
+          className={`mx-auto relative max-w-[800px] w-full flex justify-center aspect-video items-center bg-black`}
+          onMouseMove={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="relative w-[100%] h-[100%] flex justify-center items-center">
+            <div className="min-w-[100%] min-h-[100%] flex justify-center items-center">
+
+              <video ref={videoRef} id="audioPlayer" className={`custom-video-player min-w-full min-h-full ${customStyles.video}`} preload="auto" autoPlay muted playsInline onDoubleClick={fullScreenClickHandler} onClick={handlePlayPause}>
+                مرورگر شما از ویدیو پشتیبانی نمی کند.
+              </video>
+            </div>
+            <div className="absolute z-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer" onClick={handlePlayPause}>
+              {!isPlaying ? <PlaySvg /> : null}
+            </div>
+          </div>
+
+
+          <VideoControlls
+            progress={progress}
+            fullscreen={fullscreen}
+            setProgress={setProgress}
+            isPlaying={isPlaying}
+            isMuted={true}
+            curr={currentTime}
+            durr={duration}
+            controlsVisible={controlsVisible}
+            isLive={isLive}
+            volume={1}
+            videoRefrence={videoRef}
+            videoContainerRefrence={videoContainerRef}
+            onFetchAndParse={fetchAndParseM3U8}
+            handleLoadVideo={loadVideo}
+            hlsInstance={hlsInstance}
+            qualityOptions={qualityOptions}
+            currentQuality=''
+            onFullscreenToggle={fullScreenClickHandler}
+            DefaultURL={DEFAULT_FALLBACK_URL}
+            onPlayPause={handlePlayPause}
+          />
+
+        </div>
+
+      )}
+
     </>
   );
 };
