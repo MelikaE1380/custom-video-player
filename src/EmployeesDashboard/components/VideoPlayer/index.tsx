@@ -168,67 +168,59 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
 
   useEffect(() => {
-    const videoElement = videoRef.current;
-    if (!videoElement) return;
+    if (!videoRef.current) return;
 
-    // Initialize HLS instance if supported
-    let hls: Hls | null = null;
-    if (Hls.isSupported()) {
-      hls = new Hls({
-        // liveSyncDurationCount: 2,
-        // liveMaxLatencyDurationCount: 3,
-        // maxBufferHole: 0.5,
-        // maxLiveSyncPlaybackRate: 1.2,
-        // lowLatencyMode: true,
+    const video = videoRef.current;
+
+    // بررسی پشتیبانی از HLS بومی
+    const canPlayNativeHls = (video: HTMLVideoElement) =>
+      video.canPlayType('application/vnd.apple.mpegurl') !== '';
+
+    if (canPlayNativeHls(video)) {
+      // استفاده از پخش بومی
+      video.src = initialUrl;
+      video.addEventListener('timeupdate', () => {
+        const duration = video.duration || 0;
+        setCurrentTime(video.currentTime);
+        setDuration(duration);
+        setProgress((video.currentTime / duration) * 100);
       });
+    } else if (Hls.isSupported()) {
+      // استفاده از HLS.js
+      const hls = new Hls();
 
-      hls.attachMedia(videoElement);
+      hls.attachMedia(video);
       hls.loadSource(initialUrl);
 
       hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
         console.log(`Level ${data.level} loaded`);
-        setIsLive(data.details.live);
+        if (data.details.live) {
+          console.log('The stream is live.');
+          setIsLive(true);
+        } else {
+          console.log('The stream is VOD.');
+          setIsLive(false);
+        }
       });
 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        setDuration(videoElement.duration || 0);
+        setDuration(video.duration); // Set initial duration if available
       });
 
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        console.error("HLS.js error:", data);
+      video.addEventListener('timeupdate', () => {
+        const duration = video.duration || hls.media?.duration || 0;
+        setCurrentTime(video.currentTime);
+        setDuration(duration);
+        setProgress((video.currentTime / duration) * 100);
       });
-    } else if (videoElement.canPlayType("application/vnd.apple.mpegurl")) {
-      // For native HLS support (e.g., Safari)
-      videoElement.src = initialUrl;
-      videoElement.addEventListener("loadedmetadata", () => {
-        videoElement.play().catch((err) => {
-          console.error("Error playing video with native HLS:", err);
-        });
-      });
-    } else {
-      
-      console.error("HLS.js is not supported, and the browser doesn't support native HLS.");
-    }
 
-    // Update progress and duration dynamically during playback
-    const updateTime = () => {
-      const currentDuration = videoElement.duration || hls?.media?.duration || 0;
-      setCurrentTime(videoElement.currentTime);
-      setDuration(currentDuration);
-      setProgress((videoElement.currentTime / currentDuration) * 100);
-    };
-
-    videoElement.addEventListener("timeupdate", updateTime);
-
-    // Cleanup on unmount
-    return () => {
-      videoElement.removeEventListener("timeupdate", updateTime);
-      if (hls) {
+      return () => {
         hls.destroy();
-      }
-    };
+      };
+    } else {
+      console.error('HLS is not supported on this device/browser.');
+    }
   }, [initialUrl]);
-
 
 
 
@@ -436,7 +428,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
       <div className="relative w-[100%] h-[100%] flex justify-center items-center">
         <div className="min-w-[100%] min-h-[100%] flex justify-center items-center">
 
-          <video ref={videoRef} id="audioPlayer" className={`custom-video-player min-w-full min-h-full ${customStyles.video}`} autoPlay controls={false}  muted playsInline webkit-playsinline onDoubleClick={fullScreenClickHandler} onClick={handlePlayPause}>
+          <video ref={videoRef} id="audioPlayer" className={`custom-video-player min-w-full min-h-full ${customStyles.video}`} autoPlay muted playsInline onDoubleClick={fullScreenClickHandler} onClick={handlePlayPause}>
             مرورگر شما از ویدیو پشتیبانی نمی کند.
           </video>
         </div>
@@ -444,9 +436,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
           {!isPlaying ? <PlaySvg /> : null}
         </div>
       </div>
-      
-  
-  
+
 
       <VideoControlls
         progress={progress}
