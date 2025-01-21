@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path='/' element={<EmployeesDashboard />} />
 
-          <Route path='/ios' element={<IosPlayer />} />
+          {/* <Route path='/ios' element={<IosPlayer />} /> */}
 
 
         </Routes>
