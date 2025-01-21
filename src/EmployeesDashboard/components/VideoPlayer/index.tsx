@@ -167,6 +167,64 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   // }, []);
 
 
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+
+  //   const video = videoRef.current;
+
+  //   // بررسی پشتیبانی از HLS بومی
+  //   const canPlayNativeHls = (video: HTMLVideoElement) =>
+  //     video.canPlayType('application/vnd.apple.mpegurl') !== '';
+
+  //   if (canPlayNativeHls(video)) {
+  //     // استفاده از پخش بومی
+  //     video.src = initialUrl;
+  //     video.addEventListener('timeupdate', () => {
+  //       const duration = video.duration || 0;
+  //       setCurrentTime(video.currentTime);
+  //       setDuration(duration);
+  //       setProgress((video.currentTime / duration) * 100);
+  //     });
+  //   } else if (Hls.isSupported()) {
+  //     // استفاده از HLS.js
+  //     const hls = new Hls();
+
+  //     hls.attachMedia(video);
+  //     hls.loadSource(initialUrl);
+
+  //     hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
+  //       console.log(`Level ${data.level} loaded`);
+  //       if (data.details.live) {
+  //         console.log('The stream is live.');
+  //         setIsLive(true);
+  //       } else {
+  //         console.log('The stream is VOD.');
+  //         setIsLive(false);
+  //       }
+  //     });
+
+  //     hls.on(Hls.Events.MANIFEST_PARSED, () => {
+  //       setDuration(video.duration); // Set initial duration if available
+  //     });
+
+  //     video.addEventListener('timeupdate', () => {
+  //       const duration = video.duration || hls.media?.duration || 0;
+  //       setCurrentTime(video.currentTime);
+  //       setDuration(duration);
+  //       setProgress((video.currentTime / duration) * 100);
+  //     });
+
+  //     return () => {
+  //       hls.destroy();
+  //     };
+  //   } else {
+  //     console.error('HLS is not supported on this device/browser.');
+  //   }
+  // }, [initialUrl]);
+
+
+
+
   useEffect(() => {
     if (!videoRef.current) return;
 
@@ -179,6 +237,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     if (canPlayNativeHls(video)) {
       // استفاده از پخش بومی
       video.src = initialUrl;
+      video.play(); // برای اطمینان از پخش خودکار پس از تغییر src
       video.addEventListener('timeupdate', () => {
         const duration = video.duration || 0;
         setCurrentTime(video.currentTime);
@@ -188,7 +247,6 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     } else if (Hls.isSupported()) {
       // استفاده از HLS.js
       const hls = new Hls();
-
       hls.attachMedia(video);
       hls.loadSource(initialUrl);
 
@@ -221,8 +279,6 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
       console.error('HLS is not supported on this device/browser.');
     }
   }, [initialUrl]);
-
-
 
   console.log(initialUrl);
   const hlsUrl = ""
@@ -328,11 +384,11 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
     if (Hls.isSupported()) {
       const hls = new Hls({
-        liveSyncDurationCount: 2,
-        liveMaxLatencyDurationCount: 3,
-        maxBufferHole: 0.5,
-        maxLiveSyncPlaybackRate: 1.2,
-        lowLatencyMode: true,
+        // liveSyncDurationCount: 2,
+        // liveMaxLatencyDurationCount: 3,
+        // maxBufferHole: 0.5,
+        // maxLiveSyncPlaybackRate: 1.2,
+        // lowLatencyMode: true,
       });
       hls.loadSource(url);
       hls.attachMedia(videoRef.current!);
