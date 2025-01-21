@@ -591,7 +591,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   const [duration, setDuration] = useState(0);
   const [isLive, setIsLive] = useState<boolean>(false);
   const [fullscreen, setFullScreen] = useState<boolean>(false);
-  const videoRefren = useRef<HTMLVideoElement>(null);
+  // const videoRefren = useRef<HTMLVideoElement>(null);
   // const [isIos, setIsIos] = useState(false);
 
 
@@ -930,15 +930,14 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
 
   useEffect(() => {
-    if (!videoRefren.current) return;
     if (!videoRef.current) return;
-    const video1 = videoRefren.current;
-    const video2 = videoRef.current;
+    // const video1 = videoRefren.current;
+    const video = videoRef.current;
     if (isIOS) {
       // تنظیم URL برای دستگاه iOS
-      if (video1) {
-        video1.src = initialUrl;
-        video1
+      if (video) {
+        video.src = initialUrl;
+        video
           .play()
           .catch((err) => console.error("Error playing video on iOS:", err));
       }
@@ -948,7 +947,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     if (Hls.isSupported()) {
       // پشتیبانی از HLS.js
       const hls = new Hls();
-      hls.attachMedia(video2);
+      hls.attachMedia(video);
       hls.loadSource(initialUrl);
 
       hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
@@ -957,14 +956,14 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
       });
 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        setDuration(video2.duration);
+        setDuration(video.duration);
       });
 
-      video2.addEventListener("timeupdate", () => {
-        const duration = video2.duration || hls.media?.duration || 0;
-        setCurrentTime(video2.currentTime);
+      video.addEventListener("timeupdate", () => {
+        const duration = video.duration || hls.media?.duration || 0;
+        setCurrentTime(video.currentTime);
         setDuration(duration);
-        setProgress((video2.currentTime / duration) * 100);
+        setProgress((video.currentTime / duration) * 100);
       });
 
       hls.on(Hls.Events.ERROR, (event, data) => {
@@ -1174,7 +1173,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   return (
     <>
       {isIOS ? (<><div>IosPlayer</div>
-        <video ref={videoRefren} id="audioPlayer" className='custom-video-player min-w-full min-h-full' controls >
+        <video ref={videoRef} id="audioPlayer" className='custom-video-player min-w-full min-h-full' controls >
           مرورگر شما از ویدیو پشتیبانی نمی کند.
         </video></>) : (
         <div
