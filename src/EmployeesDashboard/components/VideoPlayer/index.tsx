@@ -744,55 +744,107 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
 
 
-  useEffect(() => {
-    if (!videoRef.current) return;
-    const video = videoRef.current;
+//   useEffect(() => {
+//     if (!videoRef.current) return;
+//     const video = videoRef.current;
 
 
-    if (isIos) {
-      if (videoRef.current) {
-        videoRef.current.src = initialUrl;
-        videoRef.current.play().catch((err) => console.error("Error:", err));
-      }
-      return;
+//     if (isIos) {
+//       if (videoRef.current) {
+//         videoRef.current.src = initialUrl;
+//         videoRef.current.play().catch((err) => console.error("Error:", err));
+//       }
+//       return;
+//     }
+
+
+//  else if (Hls.isSupported()) {
+
+//       const hls = new Hls();
+//       hls.attachMedia(video);
+//       hls.loadSource(initialUrl);
+
+//       hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
+//         console.log(`Level ${data.level} loaded`);
+//         if (data.details.live) {
+//           console.log('The stream is live.');
+//           setIsLive(true);
+//         } else {
+//           console.log('The stream is VOD.');
+//           setIsLive(false);
+//         }
+//       });
+
+//       hls.on(Hls.Events.MANIFEST_PARSED, () => {
+//         setDuration(video.duration);
+//       });
+
+//       video.addEventListener('timeupdate', () => {
+//         const duration = video.duration || hls.media?.duration || 0;
+//         setCurrentTime(video.currentTime);
+//         setDuration(duration);
+//         setProgress((video.currentTime / duration) * 100);
+//       });
+
+//       return () => {
+//         hls.destroy();
+//       };
+//     } else {
+//       console.error('HLS is not supported on this device/browser.');
+//     }
+//   }, [initialUrl,isIos]);
+
+
+useEffect(() => {
+  if (!videoRef.current) return;
+  const video = videoRef.current;
+
+  if (isIos) {
+    // تنظیم URL برای دستگاه iOS
+    if (video) {
+      video.src = initialUrl;
+      video
+        .play()
+        .catch((err) => console.error("Error playing video on iOS:", err));
     }
+    return;
+  }
+
+  if (Hls.isSupported()) {
+    // پشتیبانی از HLS.js
+    const hls = new Hls();
+    hls.attachMedia(video);
+    hls.loadSource(initialUrl);
+
+    hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
+      console.log(`Level ${data.level} loaded`);
+      setIsLive(data.details.live);
+    });
+
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      setDuration(video.duration);
+    });
+
+    video.addEventListener("timeupdate", () => {
+      const duration = video.duration || hls.media?.duration || 0;
+      setCurrentTime(video.currentTime);
+      setDuration(duration);
+      setProgress((video.currentTime / duration) * 100);
+    });
+
+    hls.on(Hls.Events.ERROR, (event, data) => {
+      console.error("HLS.js error:", data);
+    });
+
+    return () => {
+      hls.destroy();
+    };
+  } else {
+    console.error("HLS is not supported on this device/browser.");
+  }
+}, [initialUrl, isIos]);
 
 
- else if (Hls.isSupported()) {
-
-      const hls = new Hls();
-      hls.attachMedia(video);
-      hls.loadSource(initialUrl);
-
-      hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
-        console.log(`Level ${data.level} loaded`);
-        if (data.details.live) {
-          console.log('The stream is live.');
-          setIsLive(true);
-        } else {
-          console.log('The stream is VOD.');
-          setIsLive(false);
-        }
-      });
-
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        setDuration(video.duration);
-      });
-
-      video.addEventListener('timeupdate', () => {
-        const duration = video.duration || hls.media?.duration || 0;
-        setCurrentTime(video.currentTime);
-        setDuration(duration);
-        setProgress((video.currentTime / duration) * 100);
-      });
-
-      return () => {
-        hls.destroy();
-      };
-    } else {
-      console.error('HLS is not supported on this device/browser.');
-    }
-  }, [initialUrl,isIos]);
 
   console.log(initialUrl);
   const hlsUrl = ""
