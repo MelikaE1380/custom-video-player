@@ -428,7 +428,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
       <div className="relative w-[100%] h-[100%] flex justify-center items-center">
         <div className="min-w-[100%] min-h-[100%] flex justify-center items-center">
 
-          <video ref={videoRef} id="audioPlayer" className={`custom-video-player min-w-full min-h-full ${customStyles.video}`} autoPlay muted playsInline onDoubleClick={fullScreenClickHandler} onClick={handlePlayPause}>
+          <video ref={videoRef} id="audioPlayer" className={`custom-video-player min-w-full min-h-full ${customStyles.video}`} preload="auto"  autoPlay muted playsInline onDoubleClick={fullScreenClickHandler} onClick={handlePlayPause}>
             مرورگر شما از ویدیو پشتیبانی نمی کند.
           </video>
         </div>
