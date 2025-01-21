@@ -4,6 +4,7 @@ import Hls from "hls.js";
 import PlaySvg from "../../../assets/svg/PlaySvg";
 import './styles/styles.css'
 import VideoControlls from "./components/VideoControlls";
+import { Link } from "react-router-dom";
 
 const DEFAULT_FALLBACK_URL = "https://ontv.arvanlive.ir/hls/on2/on2.m3u8";
 
@@ -476,6 +477,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   }, []);
 
   return (
+    <>
     <div
       ref={videoContainerRef}
       className={`mx-auto relative max-w-[800px] w-full flex justify-center aspect-video items-center bg-black ${customStyles.container}`}
@@ -519,6 +521,13 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
       />
 
     </div>
+    <Link to='/ios'>
+
+<button>Go to ios component</button>
+
+
+</Link>
+    </>
   );
 };
 
