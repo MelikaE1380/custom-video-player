@@ -1039,9 +1039,18 @@ const video2 = videoRef.current;
   return (
     <>
      {isIos ? (   <><div>IosPlayer</div>
-    <video ref={videoRefren} id="audioPlayer" className='custom-video-player min-w-full min-h-full' controls >
-            مرورگر شما از ویدیو پشتیبانی نمی کند.
-          </video></>) : (
+      <video
+      ref={videoRefren}
+      id="audioPlayer"
+      className="custom-video-player min-w-full min-h-full"
+      controls
+      playsInline
+      muted={initialMuted}
+      autoPlay={autoPlay}
+      src={initialUrl} // اضافه کردن مستقیم URL
+    >
+      مرورگر شما از ویدیو پشتیبانی نمی کند.
+    </video></>) : (
              <div
              ref={videoContainerRef}
              className={`mx-auto relative max-w-[800px] w-full flex justify-center aspect-video items-center bg-black`}
