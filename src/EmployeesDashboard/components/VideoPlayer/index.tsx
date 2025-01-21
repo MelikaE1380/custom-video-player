@@ -110,61 +110,124 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   }, []);
 
 
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+
+  //   const hls = new Hls({
+  //     liveSyncDurationCount: 2,
+  //     liveMaxLatencyDurationCount: 3,
+  //     maxBufferHole: 0.5,
+  //     maxLiveSyncPlaybackRate: 1.2,
+  //     lowLatencyMode: true,
+  //   });
+  //   const video = videoRef.current;
+
+  //   hls.attachMedia(video);
+  //   hls.loadSource(initialUrl);
+
+  //   // hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+  //   // });
+  //   console.log({ LEVEL_LOADED: 'LEVEL_LOADED' })
+  //   hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
+  //     console.log(`Level ${data.level} loaded`);
+  //     if (data.details.live) {
+  //       console.log('The stream is live.');
+  //       setIsLive(true)
+  //     } else {
+  //       setIsLive(false)
+  //       console.log('The stream is VOD.');
+  //     }
+  //   });
+
+
+  //   // const interval = setInterval(() => {
+  //   //   console.log({ latency: hls.latency })
+  //   //   if (hls.latency !== undefined) {
+  //   //     const currentLiveEdge = video.currentTime + hls.latency;
+  //   //     console.log({ latency: hls.latency, currentLiveEdge })
+  //   //     setLiveEdge(currentLiveEdge);
+  //   //   }
+  //   // }, 1000);
+
+  //   hls.on(Hls.Events.MANIFEST_PARSED, () => {
+  //     setDuration(video.duration); // Set initial duration if available
+  //   });
+
+  //   video.addEventListener('timeupdate', () => {
+  //     const duration = video.duration || hls.media?.duration || 0;   //infinity
+  //     setCurrentTime(video.currentTime); // Update current time on playback
+  //     setDuration(video.duration || hls.media?.duration || 0); // Update duration dynamically
+  //     setProgress((video.currentTime / duration) * 100)
+  //   });
+
+  //   return () => {
+  //     // clearInterval(interval);
+  //     hls.destroy();
+  //   };
+  // }, []);
+
+
   useEffect(() => {
-    if (!videoRef.current) return;
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
 
-    const hls = new Hls({
-      liveSyncDurationCount: 2,
-      liveMaxLatencyDurationCount: 3,
-      maxBufferHole: 0.5,
-      maxLiveSyncPlaybackRate: 1.2,
-      lowLatencyMode: true,
-    });
-    const video = videoRef.current;
+    // Initialize HLS instance if supported
+    let hls: Hls | null = null;
+    if (Hls.isSupported()) {
+      hls = new Hls({
+        // liveSyncDurationCount: 2,
+        // liveMaxLatencyDurationCount: 3,
+        // maxBufferHole: 0.5,
+        // maxLiveSyncPlaybackRate: 1.2,
+        // lowLatencyMode: true,
+      });
 
-    hls.attachMedia(video);
-    hls.loadSource(initialUrl);
+      hls.attachMedia(videoElement);
+      hls.loadSource(initialUrl);
 
-    // hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-    // });
-    console.log({ LEVEL_LOADED: 'LEVEL_LOADED' })
-    hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
-      console.log(`Level ${data.level} loaded`);
-      if (data.details.live) {
-        console.log('The stream is live.');
-        setIsLive(true)
-      } else {
-        setIsLive(false)
-        console.log('The stream is VOD.');
-      }
-    });
+      hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
+        console.log(`Level ${data.level} loaded`);
+        setIsLive(data.details.live);
+      });
 
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        setDuration(videoElement.duration || 0);
+      });
 
-    // const interval = setInterval(() => {
-    //   console.log({ latency: hls.latency })
-    //   if (hls.latency !== undefined) {
-    //     const currentLiveEdge = video.currentTime + hls.latency;
-    //     console.log({ latency: hls.latency, currentLiveEdge })
-    //     setLiveEdge(currentLiveEdge);
-    //   }
-    // }, 1000);
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.error("HLS.js error:", data);
+      });
+    } else if (videoElement.canPlayType("application/vnd.apple.mpegurl")) {
+      // For native HLS support (e.g., Safari)
+      videoElement.src = initialUrl;
+      videoElement.addEventListener("loadedmetadata", () => {
+        videoElement.play().catch((err) => {
+          console.error("Error playing video with native HLS:", err);
+        });
+      });
+    } else {
+      
+      console.error("HLS.js is not supported, and the browser doesn't support native HLS.");
+    }
 
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      setDuration(video.duration); // Set initial duration if available
-    });
-
-    video.addEventListener('timeupdate', () => {
-      const duration = video.duration || hls.media?.duration || 0;   //infinity
-      setCurrentTime(video.currentTime); // Update current time on playback
-      setDuration(video.duration || hls.media?.duration || 0); // Update duration dynamically
-      setProgress((video.currentTime / duration) * 100)
-    });
-
-    return () => {
-      // clearInterval(interval);
-      hls.destroy();
+    // Update progress and duration dynamically during playback
+    const updateTime = () => {
+      const currentDuration = videoElement.duration || hls?.media?.duration || 0;
+      setCurrentTime(videoElement.currentTime);
+      setDuration(currentDuration);
+      setProgress((videoElement.currentTime / currentDuration) * 100);
     };
-  }, []);
+
+    videoElement.addEventListener("timeupdate", updateTime);
+
+    // Cleanup on unmount
+    return () => {
+      videoElement.removeEventListener("timeupdate", updateTime);
+      if (hls) {
+        hls.destroy();
+      }
+    };
+  }, [initialUrl]);
 
 
 
