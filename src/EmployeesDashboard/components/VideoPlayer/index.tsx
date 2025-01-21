@@ -930,6 +930,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
 
   useEffect(() => {
+    if (!videoRefren.current) return;
     if (!videoRef.current) return;
     const video1 = videoRefren.current;
     const video2 = videoRef.current;
