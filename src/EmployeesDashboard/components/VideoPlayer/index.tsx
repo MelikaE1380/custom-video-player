@@ -536,6 +536,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
+import {  isIOS } from 'react-device-detect';
 
 import PlaySvg from "../../../assets/svg/PlaySvg";
 import './styles/styles.css'
@@ -591,7 +592,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
   const [isLive, setIsLive] = useState<boolean>(false);
   const [fullscreen, setFullScreen] = useState<boolean>(false);
   const videoRefren = useRef<HTMLVideoElement>(null);
-  const [isIos, setIsIos] = useState(false);
+  // const [isIos, setIsIos] = useState(false);
 
 
 
@@ -685,57 +686,135 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
 
 
+  // const detectIos = () => {
+  //   const userAgent = navigator.userAgent.toLowerCase();
+  //   const userAgentData = (navigator as any).userAgentData || null;
+  //   const platform = navigator.platform || '';
+  
+  //   let isIos = false;
+  
+  //   // بررسی userAgentData برای مرورگرهای جدید
+  //   if (userAgentData && userAgentData.platform) {
+  //     const uaPlatform = userAgentData.platform.toLowerCase();
+  //     if (uaPlatform.includes('iphone') || uaPlatform.includes('ipad') || uaPlatform.includes('ipod')) {
+  //       isIos = true;
+  //     }
+  //   }
+  
+  //   // بررسی userAgent برای مرورگرهای قدیمی‌تر
+  //   if (!isIos) {
+  //     if (/iphone|ipad|ipod/.test(userAgent)) {
+  //       isIos = true;
+  //     }
+  //   }
+  
+  //   // بررسی platform برای مرورگرهایی که userAgentData یا userAgent پشتیبانی نمی‌کنند
+  //   if (!isIos) {
+  //     if (/iphone|ipad|ipod/.test(platform.toLowerCase())) {
+  //       isIos = true;
+  //     }
+  //   }
+  
+  //   // نتیجه نهایی
+  //   if (isIos) {
+  //     console.log('دستگاه iOS می‌باشد');
+  //     return true;
+  //   } else {
+  //     console.log('دستگاه iOS نیست');
+  //     return false;
+  //   }
+  // };
+  
+  // const detectSafari = () => {
+  //   const userAgent = navigator.userAgent.toLowerCase();
+  //   const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+  
+  //   if (isSafari) {
+  //     console.log('مرورگر Safari شناسایی شد');
+  //     return true;
+  //   } else {
+  //     console.log('مرورگر Safari نیست');
+  //     return false;
+  //   }
+  // };
+  
+  // const detectIosAndSafari = () => {
+  //   const isIos = detectIos();
+  //   const isSafari = detectSafari();
+  
+  //   if (isIos && isSafari) {
+  //     console.log('دستگاه iOS و مرورگر Safari می‌باشد');
+  //     return true;
+  //   } else if (isIos) {
+  //     console.log('دستگاه iOS است ولی مرورگر Safari نیست');
+  //   } else if (isSafari) {
+  //     console.log('مرورگر Safari است ولی دستگاه iOS نیست');
+  //   } else {
+  //     console.log('نه دستگاه iOS است و نه مرورگر Safari');
+  //   }
+  //   return false;
+  // };
+  
+  // // اجرای تشخیص
+  // detectIosAndSafari();
+  
+  // // نمایش اطلاعات برای اشکال‌زدایی
+  // console.log('navigator.userAgent:', navigator.userAgent);
+  // console.log('navigator.userAgentData:', (navigator as any).userAgentData);
+  // console.log('navigator.platform:', navigator.platform);
+  
 
-  const detectIos = () => {
-    // بررسی userAgent
-    const userAgent = navigator.userAgent.toLowerCase();
+
+  // const detectIos = () => {
+  //   // بررسی userAgent
+  //   const userAgent = navigator.userAgent.toLowerCase();
   
-    // بررسی userAgentData (فقط در مرورگرهای جدید)
-    const userAgentData = (navigator as any).userAgentData;
+  //   // بررسی userAgentData (فقط در مرورگرهای جدید)
+  //   const userAgentData = (navigator as any).userAgentData;
   
-    // اگر userAgentData موجود باشد
-    if (userAgentData && userAgentData.platform) {
-      const platform = userAgentData.platform.toLowerCase();
-      if (platform === 'iphone' || platform === 'ipad' || platform === 'ipod') {
-        setIsIos(true);
-        console.log('دستگاه iOS می‌باشد (از userAgentData)');
-        return;
-      }
-    }
+  //   // اگر userAgentData موجود باشد
+  //   if (userAgentData && userAgentData.platform) {
+  //     const platform = userAgentData.platform.toLowerCase();
+  //     if (platform === 'iphone' || platform === 'ipad' || platform === 'ipod') {
+  //       setIsIos(true);
+  //       console.log('دستگاه iOS می‌باشد (از userAgentData)');
+  //       return;
+  //     }
+  //   }
   
-    // fallback: بررسی userAgent
-    if (userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod')) {
-      setIsIos(true);
-      console.log('دستگاه iOS می‌باشد (از userAgent)');
-    } else {
-      console.log('دستگاه iOS نیست');
-      setIsIos(false);
-    }
-  };
+  //   // fallback: بررسی userAgent
+  //   if (userAgent.includes('iphone') || userAgent.includes('ipad') || userAgent.includes('ipod')) {
+  //     setIsIos(true);
+  //     console.log('دستگاه iOS می‌باشد (از userAgent)');
+  //   } else {
+  //     console.log('دستگاه iOS نیست');
+  //     setIsIos(false);
+  //   }
+  // };
   
-  const detectIosWithSafariCheck = () => {
-    const userAgent = navigator.userAgent.toLowerCase();
+  // const detectIosWithSafariCheck = () => {
+  //   const userAgent = navigator.userAgent.toLowerCase();
     
-    // شناسایی دستگاه iOS
-    const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+  //   // شناسایی دستگاه iOS
+  //   const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
     
-    // شناسایی Safari
-    const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+  //   // شناسایی Safari
+  //   const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
   
-    if (isIosDevice && isSafari) {
-      setIsIos(true);
-      console.log('دستگاه iOS با Safari می‌باشد');
-    } else {
-      setIsIos(false);
-      console.log('دستگاه iOS یا Safari نیست');
-    }
-  };
+  //   if (isIosDevice && isSafari) {
+  //     setIsIos(true);
+  //     console.log('دستگاه iOS با Safari می‌باشد');
+  //   } else {
+  //     setIsIos(false);
+  //     console.log('دستگاه iOS یا Safari نیست');
+  //   }
+  // };
   
-  // نمایش اطلاعات برای اشکال‌زدایی
-  console.log("navigator.userAgent:", navigator.userAgent);
-  console.log("navigator.userAgentData:", (navigator as any).userAgentData);
+  // // نمایش اطلاعات برای اشکال‌زدایی
+  // console.log("navigator.userAgent:", navigator.userAgent);
+  // console.log("navigator.userAgentData:", (navigator as any).userAgentData);
   
-  // اجرای توابع
+  // // اجرای توابع
   // detectIos();
   // detectIosWithSafariCheck();
   
@@ -854,9 +933,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     if (!videoRef.current) return;
     const video1 = videoRefren.current;
     const video2 = videoRef.current;
-    if (isIos) {
-        detectIos();
-  detectIosWithSafariCheck();
+    if (isIOS) {
       // تنظیم URL برای دستگاه iOS
       if (video1) {
         video1.src = initialUrl;
@@ -899,7 +976,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     } else {
       console.error("HLS is not supported on this device/browser.");
     }
-  }, [initialUrl, isIos]);
+  }, [initialUrl]);
 
 
 
@@ -1095,7 +1172,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
   return (
     <>
-      {isIos ? (<><div>IosPlayer</div>
+      {isIOS ? (<><div>IosPlayer</div>
         <video ref={videoRefren} id="audioPlayer" className='custom-video-player min-w-full min-h-full' controls >
           مرورگر شما از ویدیو پشتیبانی نمی کند.
         </video></>) : (
