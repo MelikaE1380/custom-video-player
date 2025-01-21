@@ -231,21 +231,7 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
     const video = videoRef.current;
 
     // بررسی پشتیبانی از HLS بومی
-    const canPlayNativeHls = (video: HTMLVideoElement) =>
-      video.canPlayType('application/vnd.apple.mpegurl') !== '';
-
-    if (canPlayNativeHls(video)) {
-      // استفاده از پخش بومی
-      video.src = 'https://ncdn.telewebion.com/tv3/live/playlist.m3u8';
-      
-      video.play(); // برای اطمینان از پخش خودکار پس از تغییر src
-      video.addEventListener('timeupdate', () => {
-        const duration = video.duration || 0;
-        setCurrentTime(video.currentTime);
-        setDuration(duration);
-        setProgress((video.currentTime / duration) * 100);
-      });
-    } else if (Hls.isSupported()) {
+   if (Hls.isSupported()) {
       // استفاده از HLS.js
       const hls = new Hls();
       hls.attachMedia(video);
