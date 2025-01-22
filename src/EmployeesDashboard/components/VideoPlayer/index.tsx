@@ -735,9 +735,9 @@ const VideoPlayer: React.FC<IVideoPlayerProps> = ({
 
       console.log({ response })
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
 
 
       const baseUrl = url.substring(0, url.lastIndexOf('/')) + "/";

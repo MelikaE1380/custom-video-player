@@ -7,7 +7,7 @@ import { RiSettings5Fill } from "react-icons/ri";
 import VolumeUp from "../../../../assets/svg/VolumeUp";
 import VolumeMute from "../../../../assets/svg/VolumeMute";
 import { FullScreenSvg } from "../../../../assets/svg";
-import {FullScreenExitSvg} from "../../../../assets/svg";
+import { FullScreenExitSvg } from "../../../../assets/svg";
 import Hls from "hls.js";
 
 interface IQualityOptions {
@@ -96,7 +96,7 @@ const VideoControlls: React.FC<IVideoControllsProps> = ({
 
 
   useEffect(() => {
-    onFetchAndParse(DefaultURL);//
+    onFetchAndParse(DefaultURL);
     console.log({ DefaultURL })
     handleLoadVideo(DefaultURL);
   }, [DefaultURL]);
@@ -136,20 +136,56 @@ const VideoControlls: React.FC<IVideoControllsProps> = ({
 
 
 
+  // const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const newVolume = parseFloat(e.target.value);
+  //   const videoElement = videoRefrence.current;
+
+  //   if (videoElement) {
+
+  //     if (isMuted) {
+  //       videoElement.muted = false;
+  //       setIsMuted(false);
+  //     }
+
+
+  //     videoElement.volume = newVolume;
+  //     setVolume(newVolume);
+  //   }
+  // };
+
+
+
+
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     const videoElement = videoRefrence.current;
 
     if (videoElement) {
+      if (newVolume === 0) {
 
-      if (isMuted) {
-        videoElement.muted = false;
-        setIsMuted(false);
+        videoElement.muted = true;
+        setIsMuted(true);
+      } else {
+        if (isMuted) {
+
+          videoElement.muted = false;
+          setIsMuted(false);
+
+          if (volume === 0) {
+
+            videoElement.volume = 1;
+            setVolume(1);
+          } else {
+
+            videoElement.volume = newVolume;
+            setVolume(newVolume);
+          }
+        } else {
+
+          videoElement.volume = newVolume;
+          setVolume(newVolume);
+        }
       }
-
-
-      videoElement.volume = newVolume;
-      setVolume(newVolume);
     }
   };
 
@@ -191,20 +227,20 @@ const VideoControlls: React.FC<IVideoControllsProps> = ({
   //   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   // }
 
-function secondsToHms(seconds: any) {
-  if (!seconds) return "۰۰:۰۰:۰۰"; // برای زمانی که ورودی صفر است
+  function secondsToHms(seconds: any) {
+    if (!seconds) return "۰۰:۰۰:۰۰"; // برای زمانی که ورودی صفر است
 
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
 
-  // تبدیل اعداد به فارسی با استفاده از toLocaleString
-  const formattedHours = String(hours).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
-  const formattedMinutes = String(minutes).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
-  const formattedSeconds = String(secs).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
-  console.log(formattedHours);
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-}
+    // تبدیل اعداد به فارسی با استفاده از toLocaleString
+    const formattedHours = String(hours).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
+    const formattedMinutes = String(minutes).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
+    const formattedSeconds = String(secs).padStart(2, '0').replace(/\d/g, (d) => String.fromCharCode(d.charCodeAt(0) + 1728));
+    console.log(formattedHours);
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
 
 
 
@@ -254,11 +290,11 @@ function secondsToHms(seconds: any) {
   return (
     <>
       <div className={`pb-[10px] z-600000 bottom-0 bg-opacity-70 opacity-100 transition-opacity duration-300 ease-linear w-[100%] flex flex-col absolute ${controlsVisible ? "block" : "hidden"}`}
-          style={{
-            background: "linear-gradient(to top, rgba(20, 20, 20, 0.8), rgba(20, 20, 20, 0.1))",
-            animation: "fadeIn 2s ease-in-out forwards",
-        
-          }}
+        style={{
+          background: "linear-gradient(to top, rgba(20, 20, 20, 0.8), rgba(20, 20, 20, 0.1))",
+          animation: "fadeIn 2s ease-in-out forwards",
+
+        }}
       >
         <div dir="ltr" className="px-[10px] w-[100%] progress-container flex flex-row justify-center items-center">
           {renderLiveButton()}
